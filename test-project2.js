@@ -19,7 +19,7 @@ var varDeclared = ['varDeclared', 'p1Message', 'p2Message', 'p3Message'];
 
 // Utility functions
 function arraysAreTheSame(a1, a2) {
-  if (!Array.isArray(a1) || !Array.isArray(a2) || (a1.length !== a2.length)) {
+  if (!Array.isArray(a1) || !Array.isArray(a2) || a1.length !== a2.length) {
     return false;
   }
   for (var i = 0; i < a1.length; i += 1) {
@@ -48,24 +48,36 @@ if (typeof MakeMultiFilter !== 'function') {
   } else {
     var result = filterFunc();
     if (!arraysAreTheSame([1, 2, 3], result)) {
-      console.error('filter function with no args does not return the original array', result);
+      console.error(
+        'filter function with no args does not return the original array',
+        result
+      );
       p1Message = 'FAILURE';
     }
 
     var callbackPerformed = false;
-    result = filterFunc(function (item) {
-      return item !== 2;
-    }, function (callbackResult) {
-      callbackPerformed = true;
-      if (!arraysAreTheSame([1, 3], callbackResult)) {
-        console.error('filter function callback does not filter 2 correctly', callbackResult);
-        p1Message = 'FAILURE';
+    result = filterFunc(
+      function (item) {
+        return item !== 2;
+      },
+      function (callbackResult) {
+        callbackPerformed = true;
+        if (!arraysAreTheSame([1, 3], callbackResult)) {
+          console.error(
+            'filter function callback does not filter 2 correctly',
+            callbackResult
+          );
+          p1Message = 'FAILURE';
+        }
+        if (!arraysAreTheSame([1, 2, 3], this)) {
+          console.error(
+            'filter function callback does not pass original array as this',
+            this
+          );
+          p1Message = 'FAILURE';
+        }
       }
-      if (!arraysAreTheSame([1, 2, 3], this)) {
-        console.error('filter function callback does not pass original array as this', this);
-        p1Message = 'FAILURE';
-      }
-    });
+    );
 
     if (!callbackPerformed) {
       console.error('filter function callback not performed');
@@ -87,21 +99,33 @@ if (typeof MakeMultiFilter !== 'function') {
 
     result = filterFunc();
     if (!arraysAreTheSame([1], result)) {
-      console.error('filter function callback does not filter 3 correctly', result);
+      console.error(
+        'filter function callback does not filter 3 correctly',
+        result
+      );
       p1Message = 'FAILURE';
     }
-    result = filterFuncTwo(function (item) {
-      return item !== 1;
-    }, function (callbackResult) {
-      if (!arraysAreTheSame([2, 3, 4], callbackResult)) {
-        console.error('second filter does not filter 1 (check for global variable usage)', callbackResult);
-        p1Message = 'FAILURE';
+    result = filterFuncTwo(
+      function (item) {
+        return item !== 1;
+      },
+      function (callbackResult) {
+        if (!arraysAreTheSame([2, 3, 4], callbackResult)) {
+          console.error(
+            'second filter does not filter 1 (check for global variable usage)',
+            callbackResult
+          );
+          p1Message = 'FAILURE';
+        }
+        if (!arraysAreTheSame([1, 2, 3, 4], this)) {
+          console.error(
+            'filter function callback does not pass original array as this',
+            this
+          );
+          p1Message = 'FAILURE';
+        }
       }
-      if (!arraysAreTheSame([1, 2, 3, 4], this)) {
-        console.error('filter function callback does not pass original array as this', this);
-        p1Message = 'FAILURE';
-      }
-    });
+    );
   }
 }
 console.log('Test MakeMultiFilter:', p1Message);
@@ -109,17 +133,21 @@ console.log('Test MakeMultiFilter:', p1Message);
 // ********************* Test TemplateProcessor
 
 if (typeof TemplateProcessor !== 'function') {
-  console.error('TemplateProcessor is not a function', typeof TemplateProcessor);
+  console.error(
+    'TemplateProcessor is not a function',
+    typeof TemplateProcessor
+  );
   p2Message = 'FAILURE';
 } else {
-  var template = 'My favorite month is {{month}} but not the day {{day}} or the year {{year}}';
+  var template =
+    'My favorite month is {{month}} but not the day {{day}} or the year {{year}}';
   var dateTemplate = new TemplateProcessor(template);
 
   var dictionary = { month: 'July', day: '1', year: '2016' };
   var str = dateTemplate.fillIn(dictionary);
 
   if (str !== 'My favorite month is July but not the day 1 or the year 2016') {
-    console.error('TemplateProcessor didn\'t work');
+    console.error("TemplateProcessor didn't work");
     p2Message = 'FAILURE';
   }
   varDeclared.push('template');
