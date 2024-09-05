@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "eslint-config-airbnb-base"
-  ],
+  "extends": ["eslint:recommended", "eslint-config-airbnb-base"],
   "parserOptions": {
     "sourceType": "script" // We do not use ES6/ES2015 modules
   },
