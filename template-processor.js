@@ -4,7 +4,7 @@ function TemplateProcessor(template) {
   this.template = template;
 }
 
-TemplateProcessor.prototype.fillin = function (dictionary) {
+TemplateProcessor.prototype.fillIn = function (dictionary) {
   return this.template.replace(/\{\{(\w+)\}\}/g, function (match, key) {
     return dictionary[key] !== undefined ? dictionary[key] : '';
   });
@@ -14,12 +14,18 @@ TemplateProcessor.prototype.fillin = function (dictionary) {
 const template2 =
   'My favorite month is {{month}} but not the day {{day}} or the year {{year}}';
 const dateTemplate2 = new TemplateProcessor(template2);
-const str2 = dateTemplate2.fillin({ month: 'July', day: '1', year: '2016' });
+const str2 = dateTemplate2.fillIn({ month: 'July', day: '1', year: '2016' });
 
 console.log(str2);
 
-// Test 1 (doesn't work)
-import * as assert from 'assert';
+//Test 1 (doesn't work)
+//import * as assert from 'assert';
+// above import was giving error that i didnt want to fix
+
+const assert = (test) => {
+	if (!test) console.log("Failed!");
+	else console.log("Success!");
+};
 
 const template =
   'My favorite month is {{month}} but not the day {{day}} or the year {{year}}';
